@@ -1,0 +1,45 @@
+INSERT INTO `groups` (`id`, `name`, `description`) VALUES (NULL, 'seller', 'Sellers')
+
+ALTER TABLE `order_items` ADD `seller_id` INT(11) NOT NULL AFTER `order_id`;
+
+ALTER TABLE `products` ADD `seller_id` INT(11) NOT NULL AFTER `category_id`;
+
+ALTER TABLE `orders`
+  DROP `status`,
+  DROP `active_status`;
+  
+ALTER TABLE `media` ADD `seller_id` INT(11) NOT NULL DEFAULT '0' AFTER `id`;
+
+ALTER TABLE `users` ADD `serviceable_zipcodes` VARCHAR(256) NULL DEFAULT NULL AFTER `pincode`;
+
+CREATE TABLE `seller_data` ( `id` INT(11) NOT NULL AUTO_INCREMENT , `user_id` INT(11) NOT NULL , `store_name` VARCHAR(256) NULL DEFAULT NULL , `store_url` VARCHAR(512) NULL DEFAULT NULL , `store_description` VARCHAR(512) NULL DEFAULT NULL , `category_ids` VARCHAR(256) NULL DEFAULT NULL , `logo` TEXT NULL DEFAULT NULL , `account_number` VARCHAR(100) NULL DEFAULT NULL , `account_name` VARCHAR(60) NULL DEFAULT NULL , `bank_code` VARCHAR(256) NULL DEFAULT NULL , `bank_name` VARCHAR(256) NULL DEFAULT NULL , `commission` DOUBLE(10,2) NOT NULL DEFAULT '0' , `status` TINYINT(2) NOT NULL DEFAULT '2' COMMENT 'approved: 1 | not-approved: 2 | deactive:0 | removed :7' , `permissions` TEXT NULL DEFAULT NULL , `national_identity_card` TEXT NULL DEFAULT NULL , `address_proof` TEXT NULL DEFAULT NULL , `pan_number` VARCHAR(256) NULL DEFAULT NULL , `tax_name` VARCHAR(256) NULL DEFAULT NULL , `tax_number` VARCHAR(256) NULL DEFAULT NULL , `rating` DOUBLE(8,2) NULL DEFAULT '0' , `no_of_ratings` INT(11) NULL DEFAULT '0' , `date_added` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+ALTER TABLE `seller_data` CHANGE `category_ids` `category_ids` VARCHAR(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL AFTER `user_id`, CHANGE `store_description` `store_description` VARCHAR(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL AFTER `store_name`, CHANGE `logo` `logo` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL AFTER `store_description`, CHANGE `no_of_ratings` `no_of_ratings` INT(11) NULL DEFAULT '0' AFTER `store_url`, CHANGE `rating` `rating` DOUBLE(8,2) NULL DEFAULT '0.00' AFTER `no_of_ratings`, CHANGE `bank_name` `bank_name` VARCHAR(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL AFTER `rating`, CHANGE `bank_code` `bank_code` VARCHAR(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL AFTER `bank_name`, CHANGE `account_name` `account_name` VARCHAR(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL AFTER `bank_code`, CHANGE `national_identity_card` `national_identity_card` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL AFTER `commission`, CHANGE `address_proof` `address_proof` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL AFTER `national_identity_card`, CHANGE `pan_number` `pan_number` VARCHAR(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL AFTER `address_proof`, CHANGE `tax_name` `tax_name` VARCHAR(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL AFTER `pan_number`, CHANGE `tax_number` `tax_number` VARCHAR(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL AFTER `tax_name`, CHANGE `permissions` `permissions` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL AFTER `tax_number`
+
+ALTER TABLE `order_items` ADD `delivery_boy_id` INT(11) NULL DEFAULT NULL AFTER `order_id`;
+
+ALTER TABLE `order_items` ADD `is_credited` TINYINT(2) NOT NULL DEFAULT '0' AFTER `seller_id`;
+
+CREATE TABLE `seller_commission` ( `id` INT(11) NOT NULL AUTO_INCREMENT , `seller_id` INT(11) NOT NULL , `category_id` INT(11) NOT NULL , `commission` DOUBLE(10,2) NOT NULL DEFAULT '0' , `date_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+ALTER TABLE `seller_commission` CHANGE `seller_id` `seller_id` INT(11) NOT NULL DEFAULT '0', CHANGE `category_id` `category_id` INT(11) NOT NULL DEFAULT '0';
+
+ALTER TABLE `seller_data` DROP `commission`;
+
+ALTER TABLE `orders` DROP `delivery_boy_id`;
+
+ALTER TABLE `order_bank_transfer` ADD `status` TINYINT(2) NOT NULL DEFAULT '0' COMMENT '0:pending|1:rejected|2:accepted' AFTER `attachments`;
+
+ALTER TABLE `seller_data` ADD `commission` DOUBLE(10,2) NOT NULL DEFAULT '0' AFTER `permissions`;
+
+CREATE TABLE `order_tracking` ( `id` INT(11) NOT NULL AUTO_INCREMENT , `order_id` INT(11) NOT NULL , `order_item_id` INT(11) NOT NULL , `courier_agency` VARCHAR(20) NULL DEFAULT NULL , `tracking_id` VARCHAR(120) NOT NULL , `url` VARCHAR(256) NOT NULL , `date_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+ALTER TABLE `categories` ADD `clicks` INT(11) NOT NULL DEFAULT '0' AFTER `status`;
+
+ALTER TABLE `orders` ADD `notes` VARCHAR(512) NULL DEFAULT NULL AFTER `otp`;
+
+ALTER TABLE `promo_codes` ADD `image` VARCHAR(256) NULL DEFAULT NULL AFTER `no_of_repeat_usage`;
+
+ALTER TABLE `order_items` ADD `otp` INT(11) NOT NULL DEFAULT '0' AFTER `is_credited`;
+
+ALTER TABLE `seller_data` ADD `slug` VARCHAR(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL AFTER `user_id`;

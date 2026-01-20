@@ -1,0 +1,6 @@
+customers point for multi vendor (web)
+
+
+-> in one pincode multiple area (soma prakash)
+
+<option value="<?= $seller['seller_id'] ?>" <?= (isset($product_details[0]['seller_id']) && $product_details[0]['seller_id'] == $seller['seller_id']) ? 'selected' : "" ?>><?= $seller['seller_name'].' '.'-'.' '.$seller['store_name'].' '.'(store)' ?></option>
